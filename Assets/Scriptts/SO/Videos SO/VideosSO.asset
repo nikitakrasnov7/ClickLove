@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3025fe267c2fe09449ee9c345a6147a2, type: 3}
+  m_Name: VideosSO
+  m_EditorClassIdentifier: Assembly-CSharp::VideosSO
+  FullVideosForWheel:
+  - Name: "2 \u0432\u043B\u043E\u0433 \u0441 \u043D\u043E\u0432\u043E\u0433\u043E
+      \u0433\u043E\u0434\u0430"
+    clip: {fileID: 32900000, guid: d3c0ffc96be06c24e8abdc5c2142329f, type: 3}
+  - Name: 18+
+    clip: {fileID: 32900000, guid: f82a48b368aa249458e1f8b7bde1e483, type: 3}
+  - Name: "\u0410\u0410\u0410\u0410\u0410 \u0414\u0410\u0428\u0410 \u0411\u0410\u041B\u041E\u0412\u0410\u041B\u0410\u0421\u042C"
+    clip: {fileID: 32900000, guid: 72325c0bafd9f554e810efc9110153f0, type: 3}
+  - Name: "\u0411\u0430\u043B\u0443\u0435\u043C\u0441\u044F \u0432 \u043F\u0435\u043B\u044C\u043C\u0435\u0448\u043A\u0430\u0445"
+    clip: {fileID: 32900000, guid: af2c3bf2c5a37bb4ba921b4dbd62c9a1, type: 3}
+  - Name: "\u0411\u0430\u043B\u0443\u0435\u043C\u0441\u044F \u0441 \u0414\u0430\u0448\u0435\u0439
+      \u0432 \u043A\u0440\u0430\u0441\u043D\u043E\u0439 \u043A\u043E\u043C\u043D\u0430\u0442\u0435"
+    clip: {fileID: 32900000, guid: c7258b5c270b759498e08aad2400db0c, type: 3}
+  - Name: "\u0412 \u0442\u0435\u0430\u0442\u0440\u0435 \u0432\u043B\u043E\u0433 1"
+    clip: {fileID: 32900000, guid: 31fef882344a7ad4992d6e4d9eaa215b, type: 3}
+  - Name: "\u0412\u043B\u043E\u0433 \u0432 \u043C\u043E\u0435\u043C \u0410\u0434\u0443"
+    clip: {fileID: 32900000, guid: 1da80ba5c8007a545b2ce0f5b2bad225, type: 3}
+  - Name: "\u0412\u043B\u043E\u0433 \u0432 \u0441\u0442\u0440\u043E\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u043C"
+    clip: {fileID: 32900000, guid: dda12f7de3df94946ad10bbcaa6148f9, type: 3}
+  - Name: "\u0412\u043B\u043E\u0433 \u043A\u0430\u043A \u043A\u0443\u0448\u0430\u0435\u043C
+      \u0441 \u043C\u0438\u043B\u043E\u0439 \u0414\u0430\u0448\u0435\u0439"
+    clip: {fileID: 32900000, guid: 820a5fb98fd705044b323fe5f2db2731, type: 3}
+  - Name: "\u0412\u043B\u043E\u0433 \u043D\u043E\u043C\u0435\u0440 67"
+    clip: {fileID: 32900000, guid: b37f9d51c6c06a94da7e17e4b306a00a, type: 3}
+  - Name: "\u0412\u043F\u0438\u0441\u044B\u0432\u0430\u0435\u043C \u041A\u0438\u0440\u0438\u043B\u043B\u0430"
+    clip: {fileID: 32900000, guid: 431a61770b995ee4090b0e9597de883c, type: 3}
+  - Name: "\u0413\u0443\u043B\u044F\u0435\u043C \u0438 \u043A\u0430\u0447\u0430\u0435\u043C\u044F"
+    clip: {fileID: 32900000, guid: d4d912096a0e3cf46b6be603379f24cb, type: 3}
+  - Name: "\u0413\u0443\u043B\u044F\u0435\u043C \u043F\u043E \u0445\u043E\u043B\u043E\u0434\u0443"
+    clip: {fileID: 32900000, guid: d9116225f7d11374aa8564b07cca177c, type: 3}
+  - Name: "\u0414\u0430\u0448\u0430 \u043C\u043E\u043D\u0442\u0430\u0436\u0435\u0440"
+    clip: {fileID: 32900000, guid: ac9ecc99e0ab0144b8a77950e2a32bc4, type: 3}
+  - Name: "\u0414\u0430\u0448\u0430 \u043C\u043E\u043D\u0442\u0430\u0436\u0435\u0440
+      2"
+    clip: {fileID: 32900000, guid: b017bc9f7f04c88438d7cd127d402017, type: 3}
+  - Name: "\u0414\u0430\u0448\u0430 \u043C\u043E\u043D\u0442\u0430\u0436\u0435\u0440
+      2"
+    clip: {fileID: 32900000, guid: 08689528eaf67fe4b80a71f854c62665, type: 3}
+  - Name: "\u0414\u0430\u0448\u0430 \u0441 \u043B\u043E\u043C\u043A\u043E\u0439"
+    clip: {fileID: 32900000, guid: dc9ef9b0c8a6f784e8eb60634dd20583, type: 3}
+  - Name: "\u0415\u0434\u0435\u043C \u0432 \u041A\u0430\u0437\u0430\u043D\u0435"
+    clip: {fileID: 32900000, guid: 5e5dfe7a870b669479a10b7259eefa58, type: 3}
+  - Name: "\u0415\u0449\u0435 \u043C\u043E\u043B\u043E\u0434\u044B\u0435 \u0432\u043B\u043E\u0433\u0435\u0440\u044B"
+    clip: {fileID: 32900000, guid: b02c6d7b2e7110a428bf4face50a1bb7, type: 3}
+  - Name: "\u0418\u0434\u0435\u043C \u043E\u0442 \u043E\u043B\u044C\u0433\u0438"
+    clip: {fileID: 32900000, guid: 5b3c3d0fad0a39a4faff451677a3de5b, type: 3}
+  - Name: "\u0418\u0434\u0435\u043C \u0440\u0443\u0433\u0430\u0435\u043C\u0441\u044F"
+    clip: {fileID: 32900000, guid: 950fa6f27de3d474aacd4633636fc951, type: 3}
+  - Name: "\u041A\u0430\u043A\u043E\u0435 \u0442\u043E \u043E\u0447\u0435\u043D\u044C
+      \u043C\u0438\u043B\u043E\u0435 \u0432\u0438\u0434\u0435\u043E"
+    clip: {fileID: 32900000, guid: b98bfbfe5b1ffd240a3f84567effff7b, type: 3}
+  - Name: "\u041A\u0443\u0448\u0430\u0435\u043C \u0443 \u0414\u0430\u0448\u0438"
+    clip: {fileID: 32900000, guid: b1f1ebd5578210c4ca24cec0952ec65b, type: 3}
+  - Name: "\u041A\u0443\u0448\u0430\u0435\u043C \u0443 \u041E\u043B\u0438"
+    clip: {fileID: 32900000, guid: e6a31b16ccf45a8468b1835a4da49225, type: 3}
+  - Name: "\u041C\u0438\u043B\u0430\u0448\u043A\u0438"
+    clip: {fileID: 32900000, guid: 4c51337f084097a408c0aebff6d5fa44, type: 3}
+  - Name: "\u041C\u043E\u043D\u0442\u0430\u0436\u0435\u0440 \u041D\u0438\u043A\u0438\u0442\u0430"
+    clip: {fileID: 32900000, guid: 10d22b1110c600a4e993520b5ea077ef, type: 3}
+  - Name: "\u041E\u0431\u0437\u043E\u0440 \u043D\u0430 \u0414\u0430\u0448\u0443"
+    clip: {fileID: 32900000, guid: fe7bbf0841a337548860bb50e3b82562, type: 3}
+  - Name: "\u041E\u0431\u0437\u043E\u0440 \u043D\u0430 \u0444\u0440\u0430\u043C\u0431\u0430\u043C\u0431\u0438\u043D\u0438"
+    clip: {fileID: 32900000, guid: 5279f70f631c3b144868ad4841725669, type: 3}
+  - Name: "\u041E\u0442 \u0441\u044E\u0434\u0430 \u0442\u044B \u044D\u0442\u043E
+      \u043D\u0435 \u0443\u0434\u0430\u043B\u0438\u0448\u044C"
+    clip: {fileID: 32900000, guid: 25c178316f28b5b4cbd6460217e58114, type: 3}
+  - Name: "\u041F\u0435\u0440\u0432\u044B\u0439 \u043D\u043E\u0432\u043E\u0433\u043E\u0434\u043D\u0438\u0439
+      \u0432\u043B\u043E\u0433"
+    clip: {fileID: 32900000, guid: 60406a5293933074fb4f94e397f83cbf, type: 3}
+  - Name: "\u041F\u043B\u0430\u0447\u0443 \u0438 \u0435\u0434\u0435\u043C \u043A
+      \u0414\u0430\u0448\u0435 \u0432 \u043A\u043E\u043C\u0443\u043D\u0430\u0440\u044B"
+    clip: {fileID: 32900000, guid: b4df7fb87f20b0644845c0e70ecbd459, type: 3}
+  - Name: "\u041F\u043E\u0432\u0435\u043B\u0438\u0441\u044C \u043D\u0430 \u043C\u0430\u0440\u0433\u0435\u0442\u0438\u043D\u0433"
+    clip: {fileID: 32900000, guid: 0137908f6b395524e95f8a8df1ff4a6d, type: 3}
+  - Name: "\u041F\u043E\u0441\u043B\u0430\u043D\u0438\u0435"
+    clip: {fileID: 32900000, guid: 3a523895c46bf6e4a9f9e6ec454a9933, type: 3}
+  - Name: "\u041F\u043E\u0448\u043B\u0438 \u043A\u0430\u0442\u0430\u0442\u044C\u0441\u044F
+      \u043D\u0430 \u043A\u0430\u0442\u043E\u043A"
+    clip: {fileID: 32900000, guid: 3010b77c18971794fb7a986ac82fd276, type: 3}
+  - Name: "\u0421\u043D\u043E\u0432\u0430 \u043A\u0443\u0448\u0430\u0435\u043C"
+    clip: {fileID: 32900000, guid: d15d57711b2f8454ba718068bdde0c8c, type: 3}
