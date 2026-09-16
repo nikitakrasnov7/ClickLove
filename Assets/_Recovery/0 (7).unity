@@ -5196,7 +5196,7 @@ MonoBehaviour:
   PanelAnimator: {fileID: 1890207636}
   RotateWheelBtn: {fileID: 2042086858}
   Wheel: {fileID: 1670331284}
-  Sectors: 020000000200000003000000030000000100000001000000
+  Sectors: 010000000100000001000000010000000100000001000000
   VideoWinner: {fileID: 1182270364}
   FactsWinner: {fileID: 1219720084}
   HistoryWinner: {fileID: 726823948}
@@ -10861,7 +10861,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2985792e30a343a44aecba32c35381e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextWinner
-  textData: {fileID: 11400000, guid: a0457228947424e448290233f590c364, type: 2}
+  textData: {fileID: 11400000, guid: 7637b25bf1375d448a8ca505032387f0, type: 2}
   Title: {fileID: 1535332246}
   typeTextWindow: "\u0418\u0441\u0442\u043E\u0440\u0438\u044F"
   Text: {fileID: 1352165531}
@@ -16748,6 +16748,11 @@ MonoBehaviour:
   windowContainer: {fileID: 26784907}
   profileRect: {fileID: 2049546868}
   wheelRect: {fileID: 1890207635}
+  MainWindoww: {fileID: 164884485}
+  LibraryWindoww: {fileID: 1987796264}
+  ShopWindoww: {fileID: 1798329861}
+  ProfileWindoww: {fileID: 2049546867}
+  TaskWindoww: {fileID: 295586763}
   swipeThreshold: 100
   windowWidth: 1000
   moveDuration: 0.5
@@ -18360,7 +18365,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2985792e30a343a44aecba32c35381e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextWinner
-  textData: {fileID: 11400000, guid: 5391031c5d9be8b45a5184f3760917e3, type: 2}
+  textData: {fileID: 11400000, guid: 95db5da3daaec5848bde76c70273bd59, type: 2}
   Title: {fileID: 818310665}
   typeTextWindow: "\u0418\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u044B\u0439 \u0444\u0430\u043A\u0442"
   Text: {fileID: 185287421}

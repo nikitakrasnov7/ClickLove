@@ -11,51 +11,159 @@ public class TaskElement : MonoBehaviour
     [SerializeField] Button gemsBtn;
     public bool isCompleted;
     [SerializeField] public Task taskData;
-
+    
+    private bool rewardTaken = false;
 
     public void AddStep()
     {
-        taskData.currentStep++;
-        UpdateData();
+        if (taskData == null)
+            return;
 
-        CheckSteps();
+        if (isCompleted)
+            return;
 
-    }
-    public void CheckSteps()
-    {
         if (taskData.currentStep >= taskData.needStep)
         {
-            gemsBtn.interactable = true;
+            CheckSteps();
+            return;
+        }
+
+        taskData.currentStep++;
+
+        if (taskData.currentStep > taskData.needStep)
+        {
+            taskData.currentStep = taskData.needStep;
+        }
+
+        UpdateData();
+        CheckSteps();
+    }
+
+    public void CheckSteps()
+    {
+        if (taskData == null)
+            return;
+
+        if (taskData.currentStep >= taskData.needStep)
+        {
+            taskData.currentStep = taskData.needStep;
+
             isCompleted = true;
+
+            if (gemsBtn != null)
+            {
+                gemsBtn.interactable = true;
+            }
+
+            UpdateData();
+        }
+        else
+        {
+            isCompleted = false;
+
+            if (gemsBtn != null)
+            {
+                gemsBtn.interactable = false;
+            }
         }
     }
+
     public void TakeGems()
     {
-        GameManager.Instance.AddGems(taskData.gems);
-        GameManager.Instance.statisticController.AddPlayerPoints(taskData.LevelPoints);
-        GameManager.Instance.taskController.RemoveTask(this);
+        if (rewardTaken)
+            return;
+
+        if (!isCompleted)
+            return;
+
+        if (taskData == null)
+            return;
+
+        rewardTaken = true;
+
+        // Выдаём награду.
+        if (taskData.gems > 0)
+        {
+            GameManager.Instance.AddGems(taskData.gems);
+        }
+
+        if (taskData.LevelPoints > 0)
+        {
+            GameManager.Instance.statisticController
+                .AddPlayerPoints(taskData.LevelPoints);
+        }
+
+        // Убираем задание из списка активных.
+        if (GameManager.Instance.taskController != null)
+        {
+            GameManager.Instance.taskController.RemoveTask(this);
+        }
+
+        // СРАЗУ сохраняем.
+        GameManager.Instance.Save();
+
         Destroy(gameObject);
     }
 
     public void Init(Task task)
     {
         taskData = task;
+
+        rewardTaken = false;
+
+        if (taskData == null)
+        {
+            Debug.LogError(
+                "TaskElement: Init получил null Task"
+            );
+
+            return;
+        }
+
+        if (gemsBtn != null)
+        {
+            gemsBtn.onClick.RemoveListener(TakeGems);
+            gemsBtn.onClick.AddListener(TakeGems);
+
+            TextMeshProUGUI buttonText =
+                gemsBtn.GetComponentInChildren<TextMeshProUGUI>();
+
+            if (buttonText != null)
+            {
+                buttonText.text = taskData.gems.ToString();
+            }
+        }
+
         UpdateData();
-        gemsBtn.onClick.AddListener(TakeGems);
-        gemsBtn.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = taskData.gems.ToString();
         CheckSteps();
-
-
     }
+
     public void UpdateData()
     {
-        nameTask.text = taskData.name;
-        textProgressTask.text = $"{taskData.currentStep}/{taskData.needStep}";
+        if (taskData == null)
+            return;
 
-        progressTask.maxValue = taskData.needStep;
-        progressTask.minValue = 0;
+        if (nameTask != null)
+        {
+            nameTask.text = taskData.name;
+        }
 
-        progressTask.value = taskData.currentStep;
+        if (descriptionTask != null)
+        {
+            descriptionTask.text = taskData.description;
+        }
+
+        if (textProgressTask != null)
+        {
+            textProgressTask.text =
+                $"{taskData.currentStep}/{taskData.needStep}";
+        }
+
+        if (progressTask != null)
+        {
+            progressTask.minValue = 0;
+            progressTask.maxValue = taskData.needStep;
+            progressTask.value = taskData.currentStep;
+        }
     }
-
 }

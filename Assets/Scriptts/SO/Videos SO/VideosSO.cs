@@ -21,6 +21,7 @@ public class VideosSO : ScriptableObject
 [System.Serializable]
 public class VideoElement
 {
+    public string GUID;
     public string Name;
     public VideoClip clip;
 

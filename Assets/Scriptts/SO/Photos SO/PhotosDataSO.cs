@@ -4,7 +4,7 @@ using UnityEngine;
 public class PhotosDataSO : ScriptableObject
 {
     public System.Collections.Generic.List<TestPhotoElement> photos = new();
-
+    public bool isTestSave = false;
     public void AddingPhoto(TestPhotoElement photo)
     {
         if(photo != null)

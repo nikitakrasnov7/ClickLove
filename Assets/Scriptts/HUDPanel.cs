@@ -16,11 +16,11 @@ public class HUDPanel : MonoBehaviour
     [SerializeField] RectTransform profileRect;
     [SerializeField] RectTransform wheelRect;
 
-    [SerializeField] GameObject MainWindoww;
-    [SerializeField] GameObject LibraryWindoww;
-    [SerializeField] GameObject ShopWindoww;
-    [SerializeField] GameObject ProfileWindoww;
-    [SerializeField] GameObject TaskWindoww;
+    //[SerializeField] GameObject MainWindoww;
+    //[SerializeField] GameObject LibraryWindoww;
+    //[SerializeField] GameObject ShopWindoww;
+    //[SerializeField] GameObject ProfileWindoww;
+    //[SerializeField] GameObject TaskWindoww;
 
     [SerializeField] private float swipeThreshold = 100f;
     [SerializeField] private float windowWidth = 1000f;

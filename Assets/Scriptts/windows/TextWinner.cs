@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class TextWinner : MonoBehaviour
 {
     [SerializeField] TextsSO textData;
+    public TextsSO TextData => textData;
     [SerializeField] TextMeshProUGUI Title;
     [SerializeField] string typeTextWindow;
     [SerializeField] TextMeshProUGUI Text;
@@ -19,32 +20,49 @@ public class TextWinner : MonoBehaviour
     }
     public void GetTexts()
     {
+        texts.Clear();
+
+        if (textData == null || textData.fullTexts == null)
+            return;
+
+        if (textsInLibrary == null)
+            textsInLibrary = new List<string>();
+
         foreach (TextsElement text in textData.fullTexts)
         {
+            if (text == null) continue;
+
             if (!textsInLibrary.Contains(text.valueText))
             {
                 texts.Add(text);
             }
         }
+
+        Debug.Log(
+            $"{typeTextWindow}: доступно {texts.Count} текстов"
+        );
     }
     public void OpenWindow()
     {
         if (texts.Count == 0)
         {
-            Debug.Log("кончилось" + gameObject.name);
+            Debug.Log("кончилось " + gameObject.name);
             return;
         }
-        var textEl = texts[Random.Range(0, texts.Count)];
 
-        if (!textsInLibrary.Contains(textEl.valueText))
-        {
+        TextsElement textEl = texts[Random.Range(0, texts.Count)];
 
-            Text.text = textEl.valueText ;
-            textsInLibrary.Add(textEl.valueText);
-            texts.Remove(textEl);
-            Title.text = $"{typeTextWindow} {textsInLibrary.Count} из {textData.fullTexts.Count}";
-            animator.SetBool("Open", true);
-        }
+        if (textsInLibrary == null)
+            textsInLibrary = new List<string>();
+
+        Text.text = textEl.valueText;
+
+        textsInLibrary.Add(textEl.valueText);
+        texts.Remove(textEl);
+
+        Title.text = $"{typeTextWindow} {textsInLibrary.Count} из {textData.fullTexts.Count}";
+
+        animator.SetBool("Open", true);
 
     }
     public void CloseWindow()

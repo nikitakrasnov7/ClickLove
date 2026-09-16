@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Data.Common;
+using System.IO;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -41,6 +43,9 @@ public class LibraryController : MonoBehaviour
     [SerializeField] List<PhotoElement> LegendPhotos = new List<PhotoElement>();
 
     private List<PhotoElement> fullCards = new();
+
+    [SerializeField] public PhotosDataSO photoDataSO;
+    public List<TestPhotoElement> newFullCards = new();
 #if UNITY_EDITOR
     private void OnValidate()
     {
@@ -98,22 +103,26 @@ public class LibraryController : MonoBehaviour
 
     private void Awake()
     {
-        foreach (var p in CommonPhotos)
-            p.levelCard = PhotoLevel.Common;
 
-        foreach (var p in RarePhotos)
-            p.levelCard = PhotoLevel.Rare;
+        #region тут было стара€ верси€ когда фотки хран€тьс€ в пам€ти инспектора
+        ////////тут было стара€ верси€ когда фотки хран€тьс€ в пам€ти инспектора
 
-        foreach (var p in EpicPhotos)
-            p.levelCard = PhotoLevel.Epic;
-        foreach (var p in LegendPhotos)
-            p.levelCard = PhotoLevel.Legend;
+        //foreach (var p in CommonPhotos)
+        //    p.levelCard = PhotoLevel.Common;
 
-        fullCards.AddRange(CommonPhotos);
-        fullCards.AddRange(RarePhotos);
-        fullCards.AddRange(EpicPhotos);
-        fullCards.AddRange(LegendPhotos);
+        //foreach (var p in RarePhotos)
+        //    p.levelCard = PhotoLevel.Rare;
 
+        //foreach (var p in EpicPhotos)
+        //    p.levelCard = PhotoLevel.Epic;
+        //foreach (var p in LegendPhotos)
+        //    p.levelCard = PhotoLevel.Legend;
+
+        //fullCards.AddRange(CommonPhotos);
+        //fullCards.AddRange(RarePhotos);
+        //fullCards.AddRange(EpicPhotos);
+        //fullCards.AddRange(LegendPhotos);
+        #endregion
         FullBtn.onClick.AddListener(FullCard);
 
         CommonBtn.onClick.AddListener(() => SearchCards(PhotoLevel.Common));
@@ -122,6 +131,57 @@ public class LibraryController : MonoBehaviour
         LegendBtn.onClick.AddListener(() => SearchCards(PhotoLevel.Legend));
 
         CloseInfoPanelBtn.onClick.AddListener(CloseInfoPanel);
+
+
+
+
+    }
+    public void InitData()
+    {
+
+        if (photoDataSO == null)
+        {
+            Debug.Log("LibraryController: photoDataSo == null");
+            return;
+
+        }
+        if (photoDataSO.photos == null)
+            photoDataSO.photos = new();
+
+
+        newFullCards = photoDataSO.photos;
+        fullCards.Clear();
+#if UNITY_ANDROID && !UNITY_EDITOR
+        CommonPhotos.Clear();
+        RarePhotos.Clear();
+        EpicPhotos.Clear();
+        LegendPhotos.Clear();
+#endif
+
+        foreach (var photo in newFullCards)
+        {
+            if (photo == null) continue;
+
+            if (string.IsNullOrEmpty(photo.GUID))
+            {
+                Debug.Log("LibraryCOntroller: photo.GUID == null");
+                continue;
+            }
+
+            if (CardsPlayer.Contains(photo.GUID))
+            {
+                NewLoadingCardsCreate(photo);
+                Debug.Log($"—оздана открыта€ карта {photo.NamePhoto}");
+            }
+            else
+            {
+                AddingCardsInLists(photo);
+                Debug.Log($"создана не открыта€ карта {photo.NamePhoto}");
+
+            }
+        }
+        Debug.Log($"загружено из подарка {photoDataSO.photos.Count}");
+
     }
     private void Start()
     {
@@ -133,77 +193,200 @@ public class LibraryController : MonoBehaviour
         UpdateCountCard();
         GameManager.Instance.profileController.UpdateCardCount(CardsPlayer.Count);
     }
-    public void BuyingCard(PhotoLevel level = PhotoLevel.None)
+    public void AddingCardsInLists(TestPhotoElement photo)
     {
-        BackgroundAnim.gameObject.SetActive(true);
-        CardAnim.gameObject.SetActive(true);
+        if (photo == null) return;
 
-        BackgroundAnim.Play(BackstartAnim, 0, 0f);
-        var photo = (level == PhotoLevel.None) ? RandomPhoto() : NoRandomPhoto(level);
-        gemsForPlayer = -1;
-        switch (photo.levelCard)
+        PhotoElement newPhoto = new();
+        newPhoto.GetId(photo.GUID);
+        newPhoto.Name = photo.NamePhoto;
+        newPhoto.Description = photo.Description;
+        newPhoto.levelCard = photo.Level;
+        newPhoto.Photo = SearchPhotoByGuid(photo.GUID);
+
+        fullCards.Add(newPhoto);
+
+        switch (newPhoto.levelCard)
         {
-            case PhotoLevel.Common:
-                Background.sprite = CommonBack;
-                CloseCardImage.sprite = CommonCard;
-                photo.level = "ќбычна€";
-                gemsForPlayer = 5;
+            case (PhotoLevel.Common):
+                CommonPhotos.Add(newPhoto);
                 break;
 
             case PhotoLevel.Rare:
-                Background.sprite = RareBack;
-                CloseCardImage.sprite = RareCard;
-                photo.level = "–едка€";
-                gemsForPlayer = 10;
+                RarePhotos.Add(newPhoto);
                 break;
 
             case PhotoLevel.Epic:
-                Background.sprite = EpicBack;
-                CloseCardImage.sprite = EpicCard;
-                photo.level = "Ёпическа€";
-                gemsForPlayer = 15;
+                EpicPhotos.Add(newPhoto);
                 break;
-
             case PhotoLevel.Legend:
-                Background.sprite = LegendBack;
-                CloseCardImage.sprite = LegendCard;
-                photo.level = "Ћегендарна€";
-                gemsForPlayer = 20;
+                LegendPhotos.Add(newPhoto);
                 break;
-        }
-        if (!CardsPlayer.Contains(photo.ID))
-        {
-            gemsForPlayer = -1;
-            CardImage.sprite = photo.Photo;
-            nameCard.text = photo.Name;
-            CardAnim.Play(startAnim, 0, 0f);
-
-            activePhoto = photo;
-            CardsPlayer.Add(activePhoto.ID);
-
-            GameManager.Instance.profileController.UpdateCardCount(CardsPlayer.Count);
-
-
-            if (CardsPlayer.Count == 1)
-                GameManager.Instance.taskController.TaskCompleted("firstPhoto");
-
-
-            GameManager.Instance.taskController.TaskCompleted("fullPhoto");
-
-
-        }
-        else
-        {
-            activePhoto = null;
-            CardImage.sprite = GemsCard;
-            nameCard.text = "+" + gemsForPlayer;
-            CardAnim.Play(startAnim, 0, 0f);
-
         }
 
 
     }
+    public void BuyingCard(PhotoLevel level = PhotoLevel.None)
+    {
+        if (GameManager.Instance == null)
+        {
+            Debug.LogError("LibraryController: GameManager.Instance == null");
+            return;
+        }
 
+        PhotoElement photo;
+
+        if (level == PhotoLevel.None)
+            photo = RandomPhoto();
+        else
+            photo = NoRandomPhoto(level);
+
+        // ≈сли подход€щей карты нет Ч ничего не делаем.
+        if (photo == null)
+        {
+            Debug.LogWarning(
+                $"LibraryController: нет доступных карт уровн€ {level}"
+            );
+
+            ClosePanel();
+            return;
+        }
+
+        if (string.IsNullOrEmpty(photo.ID))
+        {
+            Debug.LogError(
+                "LibraryController: у выбранной карты отсутствует ID"
+            );
+
+            ClosePanel();
+            return;
+        }
+
+        if (BackgroundAnim != null)
+        {
+            BackgroundAnim.gameObject.SetActive(true);
+            BackgroundAnim.Play( BackstartAnim,0, 0f);
+        }
+
+        if (CardAnim != null)
+            CardAnim.gameObject.SetActive(true);
+
+        gemsForPlayer = GetDuplicateReward(photo.levelCard);
+
+        switch (photo.levelCard)
+        {
+            case PhotoLevel.Common:
+
+                if (Background != null)
+                    Background.sprite = CommonBack;
+
+                if (CloseCardImage != null)
+                    CloseCardImage.sprite = CommonCard;
+
+                photo.level = "ќбычна€";
+
+                break;
+
+            case PhotoLevel.Rare:
+
+                if (Background != null)
+                    Background.sprite = RareBack;
+
+                if (CloseCardImage != null)
+                    CloseCardImage.sprite = RareCard;
+
+                photo.level = "–едка€";
+
+                break;
+
+            case PhotoLevel.Epic:
+
+                if (Background != null)
+                    Background.sprite = EpicBack;
+
+                if (CloseCardImage != null)
+                    CloseCardImage.sprite = EpicCard;
+
+                photo.level = "Ёпическа€";
+
+                break;
+
+            case PhotoLevel.Legend:
+
+                if (Background != null)
+                    Background.sprite = LegendBack;
+
+                if (CloseCardImage != null)
+                    CloseCardImage.sprite = LegendCard;
+
+                photo.level = "Ћегендарна€";
+
+                break;
+        }
+
+        if (!CardsPlayer.Contains(photo.ID))
+        {
+            gemsForPlayer = -1;
+
+            if (CardImage != null)
+                CardImage.sprite = photo.Photo;
+
+            if (nameCard != null)
+                nameCard.text = photo.Name;
+
+            activePhoto = photo;
+
+            CardsPlayer.Add(photo.ID);
+
+            if (GameManager.Instance.profileController != null)
+            {
+                GameManager.Instance.profileController.UpdateCardCount(CardsPlayer.Count);
+            }
+
+            if (CardsPlayer.Count == 1)
+            {
+                GameManager.Instance.taskController.TaskCompleted("firstPhoto");
+            }
+
+            GameManager.Instance.taskController .TaskCompleted("fullPhoto");
+        }
+        else
+        {
+            activePhoto = null;
+
+            if (CardImage != null)
+                CardImage.sprite = GemsCard;
+
+            if (nameCard != null)
+                nameCard.text = "+" + gemsForPlayer;
+        }
+
+        if (CardAnim != null)
+        {
+            CardAnim.Play(startAnim,0,0f );
+        }
+
+    }
+    private int GetDuplicateReward(PhotoLevel level)
+    {
+        switch (level)
+        {
+            case PhotoLevel.Common:
+                return 5;
+
+            case PhotoLevel.Rare:
+                return 10;
+
+            case PhotoLevel.Epic:
+                return 15;
+
+            case PhotoLevel.Legend:
+                return 20;
+
+            default:
+                return -1;
+        }
+    }
     public void OpeningCard()
     {
         CreatingPhotoElement();
@@ -244,6 +427,15 @@ public class LibraryController : MonoBehaviour
             FullCard();
         }
     }
+    public void NewLoadingCardsCreate(TestPhotoElement data)
+    {
+        var newCard = Instantiate(CardPrefab, parentForCard);
+        newCard.GetComponent<CardElement>().Init(data, SearchPhotoByGuid(data.GUID));
+        newCard.GetComponent<CardElement>().CloseHint();
+        CardsElements.Add(newCard);
+        FullCard();
+
+    }
     public string GetStringLevel(PhotoLevel level)
     {
         string result = string.Empty;
@@ -274,52 +466,106 @@ public class LibraryController : MonoBehaviour
     public PhotoElement RandomPhoto()
     {
         float chance = Random.Range(0f, 100f);
-        PhotoElement photo = new();
+
+        PhotoElement photo = null;
+
         if (chance < CommonChance)
         {
             photo = RandomPhotoInList(CommonPhotos);
-
         }
         else if (chance < RareChance)
         {
             photo = RandomPhotoInList(RarePhotos);
-
         }
         else if (chance < EpicChance)
         {
             photo = RandomPhotoInList(EpicPhotos);
-
         }
         else if (chance < LegendChance)
         {
             photo = RandomPhotoInList(LegendPhotos);
-
         }
+
+        if (photo == null)
+        {
+            photo = GetAnyAvailablePhoto();
+        }
+
+        return photo;
+    }
+    private PhotoElement GetAnyAvailablePhoto()
+    {
+        PhotoElement photo;
+
+        photo = RandomPhotoInList(CommonPhotos);
+
+        if (photo != null)
+            return photo;
+
+        photo = RandomPhotoInList(RarePhotos);
+
+        if (photo != null)
+            return photo;
+
+        photo = RandomPhotoInList(EpicPhotos);
+
+        if (photo != null)
+            return photo;
+
+        photo = RandomPhotoInList(LegendPhotos);
+
         return photo;
     }
     public PhotoElement NoRandomPhoto(PhotoLevel level)
     {
-        PhotoElement photo = new();
         switch (level)
         {
             case PhotoLevel.Common:
-                photo = RandomPhotoInList(CommonPhotos);
-                break;
+                return RandomPhotoInList(CommonPhotos);
             case PhotoLevel.Rare:
-                photo = RandomPhotoInList(RarePhotos);
-                break;
+                return RandomPhotoInList(RarePhotos);
             case PhotoLevel.Epic:
-                photo = RandomPhotoInList(EpicPhotos);
-                break;
+                return RandomPhotoInList(EpicPhotos);
             case PhotoLevel.Legend:
-                photo = RandomPhotoInList(LegendPhotos);
-                break;
+                return RandomPhotoInList(LegendPhotos);
+            default:
+                return GetAnyAvailablePhoto();
         }
-        return photo;
     }
     public PhotoElement RandomPhotoInList(List<PhotoElement> list)
     {
-        return list[Random.Range(0, list.Count)];
+        if (list == null || list.Count == 0)
+            return null;
+
+        List<PhotoElement> validPhotos =
+            list.Where(p => p != null).ToList();
+
+        if (validPhotos.Count == 0)
+            return null;
+
+        return validPhotos[
+            Random.Range(0, validPhotos.Count)
+        ];
+    }
+    Sprite defoultSprite;
+    public Sprite SearchPhotoByGuid(string guid)
+    {
+        string path = Path.Combine(Application.persistentDataPath, $"{guid}.png");
+        Sprite sprite;
+        if (File.Exists(path))
+        {
+            byte[] bytes = File.ReadAllBytes(path);
+            Texture2D texture = new Texture2D(2, 2);
+            texture.LoadImage(bytes);
+
+            sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+
+        }
+        else
+        {
+            sprite = defoultSprite;
+        }
+        return sprite;
     }
     public void UpdateCountCard()
     {
@@ -413,10 +659,10 @@ public class PhotoElement
     {
         if (string.IsNullOrEmpty(ID))
             id = System.Guid.NewGuid().ToString();
-        if(Photo.name!=null && string.IsNullOrEmpty(Description))
+        if (Photo.name != null && string.IsNullOrEmpty(Description))
         {
             Description = Photo.name;
-            Description = Description.Replace("_0","");
+            Description = Description.Replace("_0", "");
 
         }
     }

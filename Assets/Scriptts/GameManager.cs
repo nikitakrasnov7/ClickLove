@@ -1,8 +1,9 @@
+using System.Collections.Generic;
+using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-
 public class GameManager : MonoBehaviour
 {
 
@@ -76,9 +77,13 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         //if (Application.platform == RuntimePlatform.Android)
+        libraryController.InitData();
+
+        LoadVideos();
+        LoadTexts();
         Load();
 
-
+        wheelController.VideoWinner.GetVideos();
 
         SaveBtn.onClick.AddListener(Save);
         LoadBtn.onClick.AddListener(Load);
@@ -96,6 +101,7 @@ public class GameManager : MonoBehaviour
 
         taskController.CreatingTask();
         shopController.Init();
+
 
         wheelController.StateButton();
     }
@@ -261,6 +267,54 @@ public class GameManager : MonoBehaviour
     {
         saveController.Save();
     }
+    private void LoadVideos()
+    {
+        string path = Path.Combine( Application.persistentDataPath,"CARDS_PLAYER.json" );
+
+        if (!File.Exists(path))
+        {
+            Debug.Log("CARDS_PLAYER.json не найден");
+            return;
+        }
+
+        string json = File.ReadAllText(path);
+
+        CreateCardsController.TestSaveCards data = JsonUtility.FromJson<CreateCardsController.TestSaveCards>(json);
+
+        if (data == null || data.videos == null)
+        {
+            Debug.Log("В сохранении нет видео");
+            return;
+        }
+
+        VideosSO videosSO = wheelController.VideoWinner.VideoData;
+
+        if (videosSO == null)
+        {
+            Debug.LogError("VideosSO не назначен в VideoWinner!");
+            return;
+        }
+
+        videosSO.FullVideosForWheel.Clear();
+
+        foreach (VideoElement video in data.videos)
+        {
+            if (video == null)
+                continue;
+
+            if (string.IsNullOrEmpty(video.GUID))
+                continue;
+
+            bool exists = videosSO.FullVideosForWheel.Exists(v => v.GUID == video.GUID);
+
+            if (!exists)
+            {
+                videosSO.FullVideosForWheel.Add(video);
+            }
+        }
+
+        Debug.Log("Загружено видео из CARDS_PLAYER.json: " +videosSO.FullVideosForWheel.Count);
+    }
     public void Load()
     {
         SaveSystem.SaveData data = saveController.LoadingData();
@@ -278,17 +332,23 @@ public class GameManager : MonoBehaviour
         PriceForAutoClick = data.PriceAvtoClick;
         AutoClickCount = data.AvtoClickStep;
 
-        var cards = data.playerCards;
 
-        if (data.tasks.Count != 0)
+        if (data.tasks!=null && data.tasks.Count != 0)
         {
             taskController.tasks = data.tasks;
         }
-        foreach (var card in cards)
+        
+        var cards = data.playerCards;
+        if (cards != null)
         {
-            libraryController.LoadingCardsCreate(card);
-        }
+            foreach (var card in cards)
+            {
+                if (string.IsNullOrEmpty(card))
+                    continue;
 
+                libraryController.LoadingCardsCreate(card);
+            }
+        }
         shopController.levelForce = data.levelForce;
         shopController.levelCrit = data.levelCrit;
         shopController.levelDohod = data.levelDohod;
@@ -306,17 +366,95 @@ public class GameManager : MonoBehaviour
         offlineBonusController.SetExitTime(data.exitTime);
 
 
-        wheelController.VideoWinner.videosInLibrary = data.videosInLibrary;
-        wheelController.VideoWinner.GetVideos();
+        wheelController.VideoWinner.videosInLibrary = data.videosInLibrary ?? new System.Collections.Generic.List<string>();
 
-        wheelController.FactsWinner.textsInLibrary = data.factsInLibrary;
+        wheelController.FactsWinner.textsInLibrary =
+            data.factsInLibrary ?? new List<string>();
         wheelController.FactsWinner.GetTexts();
 
-        wheelController.HistoryWinner.textsInLibrary = data.historyInLibrary;
+
+        wheelController.HistoryWinner.textsInLibrary =
+            data.historyInLibrary ?? new List<string>();
         wheelController.HistoryWinner.GetTexts();
 
 
         FullUpdate();
+    }
+
+    private void LoadTexts()
+    {
+        string path = Path.Combine(  Application.persistentDataPath,"CARDS_PLAYER.json" );
+
+        if (!File.Exists(path))
+        {
+            Debug.Log("GameManager: CARDS_PLAYER.json не найден");
+            return;
+        }
+
+        string json = File.ReadAllText(path);
+
+        CreateCardsController.TestSaveCards data =
+            JsonUtility.FromJson<CreateCardsController.TestSaveCards>(json);
+
+        if (data == null)
+        {
+            Debug.LogError("GameManager: не удалось прочитать CARDS_PLAYER.json");
+            return;
+        }
+
+        if (data.facts == null)
+            data.facts = new List<string>();
+
+        if (data.history == null)
+            data.history = new List<string>();
+
+        if (wheelController.FactsWinner != null &&
+            wheelController.FactsWinner.TextData != null)
+        {
+            TextsSO factsSO = wheelController.FactsWinner.TextData;
+
+            if (factsSO.fullTexts == null)
+                factsSO.fullTexts = new List<TextsElement>();
+
+            factsSO.fullTexts.Clear();
+
+            foreach (string factText in data.facts)
+            {
+                if (string.IsNullOrWhiteSpace(factText))
+                    continue;
+
+                TextsElement fact = new TextsElement();
+                fact.valueText = factText.Trim();
+
+                factsSO.fullTexts.Add(fact);
+            }
+
+            Debug.Log("GameManager: загружено фактов = " + factsSO.fullTexts.Count );
+        }
+
+        if (wheelController.HistoryWinner != null &&
+            wheelController.HistoryWinner.TextData != null)
+        {
+            TextsSO historySO = wheelController.HistoryWinner.TextData;
+
+            if (historySO.fullTexts == null)
+                historySO.fullTexts = new List<TextsElement>();
+
+            historySO.fullTexts.Clear();
+
+            foreach (string historyText in data.history)
+            {
+                if (string.IsNullOrWhiteSpace(historyText))
+                    continue;
+
+                TextsElement history = new TextsElement();
+                history.valueText = historyText.Trim();
+
+                historySO.fullTexts.Add(history);
+            }
+
+            Debug.Log("GameManager: загружено историй = " +historySO.fullTexts.Count);
+        }
     }
 
     public void AddPLayerClick(int clicks)

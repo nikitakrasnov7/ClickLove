@@ -1,13 +1,14 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
 public class SaveSystem
 {
+    [Serializable]
     public class SaveData
     {
-
-        public int saveVersion = 1;
+        public int saveVersion = 2;
 
         public int PlayerClickBalance;
         public int fullClicksCount;
@@ -24,14 +25,13 @@ public class SaveSystem
         public List<string> playerCards = new();
         public List<Task> tasks = new();
 
+        public int levelForce = 1;
+        public int levelCrit = 1;
+        public int levelDohod = 1;
 
-        public int levelForce;
-        public int levelCrit;
-        public int levelDohod;
-
-        public int forcePrice;
-        public int CritPrice;
-        public int DohodPrice;
+        public int forcePrice = 10;
+        public int CritPrice = 15;
+        public int DohodPrice = 20;
 
         public int levelsCompleted;
         public float playerPointsLevels;
@@ -41,11 +41,17 @@ public class SaveSystem
         public List<string> videosInLibrary = new();
         public List<string> factsInLibrary = new();
         public List<string> historyInLibrary = new();
+
         public SaveData()
         {
-
         }
-        public SaveData(int clicks, int fullClicks, int fullPlayerClicks, int gems, List<string> cards)
+
+        public SaveData(
+            int clicks,
+            int fullClicks,
+            int fullPlayerClicks,
+            int gems,
+            List<string> cards)
         {
             PlayerClickBalance = clicks;
             fullClicksCount = fullClicks;
@@ -56,27 +62,100 @@ public class SaveSystem
     }
 
     private const string SAVE_NAME = "SAVE.json";
+
     public static void SavingData(SaveData data)
     {
-        string path = Path.Combine(Application.persistentDataPath, SAVE_NAME);
+        if (data == null)
+        {
+            Debug.LogError("SaveSystem: попытка сохранить null data");
+            return;
+        }
+
+        string path = Path.Combine( Application.persistentDataPath,SAVE_NAME);
+
         string tempPath = path + ".tmp";
 
+        try
+        {
+            string json = JsonUtility.ToJson(data, true);
 
-        File.WriteAllText(path, JsonUtility.ToJson(data));
+            File.WriteAllText(tempPath, json);
+
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+
+            File.Move(tempPath, path);
+            Debug.Log("SaveSystem: сохранение выполнено");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("SaveSystem: ошибка сохранения:\n" + e);
+
+            try
+            {
+                if (File.Exists(tempPath))
+                    File.Delete(tempPath);
+            }
+            catch
+            {
+                // Ничего не делаем.
+            }
+        }
     }
+
     public static SaveData LoadingData()
     {
-        string path = Path.Combine(Application.persistentDataPath, SAVE_NAME);
+        string path = Path.Combine(Application.persistentDataPath,SAVE_NAME);
 
-        SaveData data = new();
-
-        if (File.Exists(path))
+        if (!File.Exists(path))
         {
-            data = JsonUtility.FromJson<SaveData>(File.ReadAllText(path));
+            Debug.Log("SaveSystem: SAVE.json не найден. Создаём новое сохранение.");
+            return new SaveData();
+        }
+
+        try
+        {
+            string json = File.ReadAllText(path);
+
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                Debug.LogWarning("SaveSystem: SAVE.json пустой. Создаём новое сохранение.");
+                return new SaveData();
+            }
+
+            SaveData data = JsonUtility.FromJson<SaveData>(json);
+
+            if (data == null)
+            {
+                Debug.LogWarning( "SaveSystem: не удалось прочитать SAVE.json." );
+                return new SaveData();
+            }
+
+            if (data.playerCards == null)
+                data.playerCards = new List<string>();
+
+            if (data.tasks == null)
+                data.tasks = new List<Task>();
+
+            if (data.videosInLibrary == null)
+                data.videosInLibrary = new List<string>();
+
+            if (data.factsInLibrary == null)
+                data.factsInLibrary = new List<string>();
+
+            if (data.historyInLibrary == null)
+                data.historyInLibrary = new List<string>();
+
+            Debug.Log($"SaveSystem: сохранение загружено. Version = {data.saveVersion}");
+
             return data;
         }
-        else return data;
-
-
+        catch (Exception e)
+        {
+            Debug.LogError( "SaveSystem: ошибка загрузки SAVE.json:\n" + e);
+            return new SaveData();
+        }
     }
 }

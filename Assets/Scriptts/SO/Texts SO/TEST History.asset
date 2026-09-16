@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3025fe267c2fe09449ee9c345a6147a2, type: 3}
-  m_Name: TEST VIDEO
-  m_EditorClassIdentifier: Assembly-CSharp::VideosSO
-  FullVideosForWheel: []
+  m_Script: {fileID: 11500000, guid: f02eb931ee431e94b83583990d514a29, type: 3}
+  m_Name: TEST History
+  m_EditorClassIdentifier: Assembly-CSharp::TextsSO
+  fullTexts: []

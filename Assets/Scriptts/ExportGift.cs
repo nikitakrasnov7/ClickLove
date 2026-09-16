@@ -1,16 +1,16 @@
-using System;
+
 using System.Collections;
-using System.Data.Common;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using UnityEngine;
 using UnityEngine.UI;
-using NativeShareNamespace;
 
 public class ExportGift : MonoBehaviour
 {
     private const string FILE_NAME = "CARDS_PLAYER.json";
     [SerializeField] Button createExport;
+
 
 
     bool isExport = false;
@@ -49,20 +49,39 @@ public class ExportGift : MonoBehaviour
             string json = File.ReadAllText(jsonPath);
             CreateCardsController.TestSaveCards data = JsonUtility.FromJson<CreateCardsController.TestSaveCards>(json);
             Debug.Log("копируем фотки");
+            if (data.facts == null)
+                data.facts = new List<string>();
+
+            if (data.history == null)
+                data.history = new List<string>();
             foreach (var card in data.photos)
             {
                 string photoPath = Path.Combine(path, $"{card.GUID}.png");
                 if (File.Exists(photoPath))
                 {
-                    File.Copy(
-                        photoPath,
-                        Path.Combine(tempFolder, $"{card.GUID}.png"));
+                    File.Copy( photoPath, Path.Combine(tempFolder, $"{card.GUID}.png"));
                 }
                 else
                 {
                     Debug.Log("проблема нет фотки");
                 }
             }
+            Debug.Log("копируем видео");
+            foreach(var video in data.videos)
+            {
+                string videoPath = Path.Combine(path, $"{video.GUID}.mp4");
+                if (File.Exists(videoPath))
+                {
+                    File.Copy(videoPath, Path.Combine(tempFolder, $"{video.GUID}.mp4"));
+                }
+                else
+                {
+                    Debug.Log("видео нет");
+                }
+            }
+
+            Debug.Log($"Export: Facts: {data.facts.Count} History {data.history.Count}");
+
             string zipPath = Path.Combine(path, "MyGift.zip");
             if (File.Exists(zipPath))
                 File.Delete(zipPath);

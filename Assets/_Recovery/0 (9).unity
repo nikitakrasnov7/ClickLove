@@ -883,8 +883,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TestCreateCardController
   photoData: {fileID: 11400000, guid: a1a35b6574c57c4458596b502c409ce2, type: 2}
   videoData: {fileID: 11400000, guid: f998be4bad0227842b76613d90e0a53d, type: 2}
-  factsData: {fileID: 11400000, guid: 5391031c5d9be8b45a5184f3760917e3, type: 2}
-  historyData: {fileID: 11400000, guid: a0457228947424e448290233f590c364, type: 2}
+  factsData: {fileID: 0}
+  historyData: {fileID: 0}
   PreviewPhoto: {fileID: 346510574}
   spritePhoto: {fileID: 0}
   getPhoto: {fileID: 947916259}
@@ -904,8 +904,8 @@ MonoBehaviour:
   renderTexture: {fileID: 8400000, guid: e13dbb4ac2c75254f8e309c67fcfe004, type: 2}
   GetVideo: {fileID: 89370353}
   inputNameVideo: {fileID: 1471902259}
-  inputFacts: {fileID: 916845632}
-  inputHistory: {fileID: 1031915098}
+  inputFacts: {fileID: 0}
+  inputHistory: {fileID: 0}
   CreatedCard: {fileID: 620174457}
   CreateVideoFile: {fileID: 794704437}
   CreateFact: {fileID: 1921632362}
@@ -6548,7 +6548,7 @@ GameObject:
   - component: {fileID: 1129450973}
   - component: {fileID: 1129450972}
   m_Layer: 5
-  m_Name: Export
+  m_Name: Create Card
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11072,7 +11072,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b5c919aa060357428902d698cc89b69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExportGift
-  createExport: {fileID: 1129450972}
+  createExport: {fileID: 225437468}
+  videoCreateExport: {fileID: 1129450972}
 --- !u!4 &2145828633
 Transform:
   m_ObjectHideFlags: 0
