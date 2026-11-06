@@ -97,6 +97,7 @@ public class OfflineBonusController : MonoBehaviour
     }
     public void SetExitTime(string saveExitTime)
     {
+        if (saveExitTime == string.Empty) return;
         exitTime = DateTime.Parse(saveExitTime);
         enterTime = DateTime.Now;
 
